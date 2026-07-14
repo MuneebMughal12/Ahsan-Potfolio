@@ -13,18 +13,32 @@ app.use(cors({
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ limit: '50mb', extended: true }))
 
-// Database Connection
-console.log('🔄 Connecting to MongoDB...')
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('✅ MongoDB connected successfully!')
-    console.log('📊 Database: ahsan-portfolio')
-  })
-  .catch((err) => {
-    console.error('❌ MongoDB connection error:', err.message)
-    process.exit(1)
-  })
+// Database Connection (cached for serverless)
+let isConnected = false
+
+const connectDB = async () => {
+  if (isConnected) return
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      bufferCommands: false,
+    })
+    isConnected = true
+    console.log('MongoDB connected')
+  } catch (err) {
+    console.error('MongoDB connection error:', err.message)
+    throw err
+  }
+}
+
+// Connect before every request (serverless needs this)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB()
+    next()
+  } catch (err) {
+    res.status(500).json({ error: 'Database connection failed' })
+  }
+})
 
 // Routes
 app.use('/api/auth', require('./routes/auth'))
@@ -50,10 +64,10 @@ app.use((err, req, res, next) => {
 // Export for Vercel serverless
 module.exports = app
 
-// Start server only in non-Vercel environment
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+// Start server only locally
+if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 5000
   app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`)
+    console.log(`Server running on http://localhost:${PORT}`)
   })
 }
