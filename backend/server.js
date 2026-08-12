@@ -7,24 +7,32 @@ const app = express()
 
 // Middleware
 app.use(cors({
-  origin: ['https://ahsan-potfolio.vercel.app', 'http://localhost:3000'],
+  origin: [
+    'https://ahsan-potfolio.vercel.app',
+    'http://localhost:3000',
+    process.env.FRONTEND_URL,
+  ].filter(Boolean),
   credentials: true
 }))
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ limit: '50mb', extended: true }))
 
-// Database Connection (cached for serverless)
-let isConnected = false
+// Database connection promise is cached across warm serverless invocations.
+let connectionPromise = null
 
 const connectDB = async () => {
-  if (isConnected) return
+  if (mongoose.connection.readyState === 1) return mongoose.connection
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      bufferCommands: false,
-    })
-    isConnected = true
+    if (!connectionPromise) {
+      connectionPromise = mongoose.connect(process.env.MONGODB_URI, {
+        bufferCommands: false,
+      })
+    }
+    await connectionPromise
     console.log('MongoDB connected')
+    return mongoose.connection
   } catch (err) {
+    connectionPromise = null
     console.error('MongoDB connection error:', err.message)
     throw err
   }

@@ -7,6 +7,16 @@ const projectSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    slug: {
+      type: String,
+      trim: true,
+      unique: true,
+      sparse: true,
+    },
+    projectCode: {
+      type: String,
+      trim: true,
+    },
     description: {
       type: String,
       required: true,
@@ -21,6 +31,10 @@ const projectSchema = new mongoose.Schema(
       required: true,
     },
     clientName: {
+      type: String,
+      trim: true,
+    },
+    thumbnail: {
       type: String,
       trim: true,
     },
@@ -40,6 +54,7 @@ const projectSchema = new mongoose.Schema(
       {
         url: String,
         publicId: String,
+        alt: String,
       },
     ],
     floorPlans: [
@@ -67,8 +82,22 @@ const projectSchema = new mongoose.Schema(
       enum: ['Completed', 'In Progress', 'Archived'],
       default: 'Completed',
     },
+    sourcePages: [Number],
   },
   { timestamps: true }
 )
+
+projectSchema.pre('validate', function (next) {
+  if (!this.slug && this.title) {
+    this.slug = this.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
+  }
+  if (!this.thumbnail && this.images?.length) {
+    this.thumbnail = this.images[0].url
+  }
+  next()
+})
 
 module.exports = mongoose.model('Project', projectSchema)

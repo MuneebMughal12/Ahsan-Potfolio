@@ -1,7 +1,7 @@
 const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL
 const API_URL =
-  typeof window !== 'undefined' && window.location.hostname !== 'localhost'
-    ? '/api'
+  process.env.NODE_ENV === 'production' && configuredApiUrl?.includes('localhost')
+    ? 'https://ahsan-portfolio-backend.vercel.app/api'
     : configuredApiUrl || 'http://localhost:5000/api'
 
 export const apiCall = async (endpoint, options = {}) => {
