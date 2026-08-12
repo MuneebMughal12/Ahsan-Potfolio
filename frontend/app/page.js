@@ -51,7 +51,7 @@ export default function Home() {
           <div className="split-hero-links"><Link href="/portfolio">View houses <span>↗</span></Link><Link href="/contact">Start a project</Link></div>
           <div className="split-hero-stats"><div><strong>4+</strong><span>Years experience</span></div><div><strong>44</strong><span>Residential works</span></div></div>
         </div>
-        <div className="split-hero-image">
+        <div className={`split-hero-image ${profile.url ? 'has-profile' : 'has-project-render'}`}>
           <AnimatePresence mode="wait"><motion.img key={profile.url || heroProject?._id} src={profile.url || cover(heroProject)} alt={profile.url ? 'Ahsan Aziz, Architect' : heroProject?.title || 'Residential architecture'} style={profile.url ? { objectPosition: `${50 + (profile.adjustment.posX / 300) * 45}% ${50 + (profile.adjustment.posY / 200) * 45}%`, transform: `scale(${profile.adjustment.scale})` } : undefined} initial={{opacity:0,scale:1.02}} animate={{opacity:1,scale:1}} transition={{duration:1}} /></AnimatePresence>
           <p>{profile.url ? 'Ahsan Aziz · Architect' : `${heroProject?.title || 'Selected residence'} · Upload profile photo from Admin Settings`}</p>
         </div>

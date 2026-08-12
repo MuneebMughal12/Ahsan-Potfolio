@@ -125,3 +125,47 @@ img { display:block; max-width:100%; }
 
 @media(max-width:900px){.era-hero{grid-template-columns:1fr;min-height:900px;height:auto}.split-hero-copy{min-height:570px;padding:130px 28px 45px 45px}.split-hero-copy>h1{font-size:clamp(70px,20vw,110px)}.split-hero-copy>h1 em{margin-left:8vw}.split-hero-stats{margin-top:55px}.split-hero-image{height:68vh;min-height:480px}.era-profile{left:25px;bottom:105px;width:92px}.era-profile>div,.era-profile>img{width:76px;height:96px}.era-profile>p span{font-size:12px}.era-profile>p small{font-size:6px}.era-experience{padding-top:100px;padding-bottom:105px}.era-experience-head{margin:65px 0}.era-experience-grid{grid-template-columns:1fr;gap:65px}.era-residential{padding-top:100px;padding-bottom:105px}.era-residential-head{display:block}.era-residential-head .text-link{margin-top:38px}.era-residential-grid{display:grid;grid-template-columns:1fr;gap:55px}.era-home-card,.era-home-card:nth-child(3n+2),.era-home-card:nth-child(3n+3){grid-column:1;margin-top:0}.era-home-card>img{height:auto;min-height:0;aspect-ratio:4/3}}
 @media(max-width:520px){.era-profile{bottom:100px}.era-home-card>img{height:auto;min-height:0}.era-experience-stats strong{font-size:48px}.era-expertise>div strong{font-size:18px}}
+
+/* Keep the complete 2.13:1 presentation render visible on every screen. */
+.split-hero-image.has-project-render,
+.era-location-image-a,
+.era-location-image-b,
+.era-concept-image,
+.era-type-viewer,
+.era-home-card>img,
+.era-live-grid>img,
+.era-live-grid>img:last-child,
+.project-image,
+.detail-hero {
+  height:auto;
+  min-height:0;
+  aspect-ratio:2106/990;
+}
+.split-hero-image.has-project-render img,
+.era-location-image img,
+.era-concept-image img,
+.era-type-viewer>img,
+.era-home-card>img,
+.era-live-grid>img,
+.project-image img,
+.detail-hero>img {
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center;
+}
+.gallery-stack img{width:100%;height:auto;max-height:none;object-fit:contain}
+
+@media(max-width:900px){
+  .split-hero-image.has-project-render,
+  .era-location-image-a,
+  .era-location-image-b,
+  .era-concept-image,
+  .era-type-viewer,
+  .era-home-card>img,
+  .era-live-grid>img,
+  .era-live-grid>img:last-child,
+  .project-image,
+  .detail-hero{height:auto;min-height:0;aspect-ratio:2106/990}
+  .split-hero-image.has-profile{height:68vh;min-height:480px}
+}
