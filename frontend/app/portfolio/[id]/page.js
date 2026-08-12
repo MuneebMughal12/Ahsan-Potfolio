@@ -39,7 +39,7 @@ export default function ProjectDetail() {
   return (
     <article className="detail-page">
       <section className="detail-hero">
-        <img src={imageUrl(images[0])} alt={images[0]?.alt || project.title} />
+        <img src={imageUrl(images[0])} alt={images[0]?.alt || project.title} loading="eager" decoding="async" fetchPriority="high" />
         <div className="detail-shade" />
         <Link href="/portfolio" className="back-link">← All projects</Link>
         <div className="detail-title"><p>{project.category} · {project.year || 'Selected work'}</p><h1>{project.title}</h1><span>{project.location}</span></div>

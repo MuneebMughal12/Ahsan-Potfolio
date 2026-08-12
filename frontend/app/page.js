@@ -37,8 +37,6 @@ export default function Home() {
 
   return (
     <div className="era-home">
-      <aside className="era-rail"><span>00</span><i /><b>Scroll</b></aside>
-
       <section className="era-hero" id="hero">
         <AnimatePresence mode="wait">
           {cover(heroProject, heroMode === 'day' ? 1 : 2) && <motion.img key={`${heroMode}-${heroProject?._id}`} src={cover(heroProject, heroMode === 'day' ? 1 : 2)} alt={heroProject?.title || 'Ahsan Aziz architecture'} initial={{opacity:0,scale:1.035}} animate={{opacity:1,scale:1}} exit={{opacity:0}} transition={{duration:1.2}} />}

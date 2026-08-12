@@ -1,6 +1,7 @@
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import SiteExperience from '@/components/SiteExperience'
 
 export const metadata = {
   metadataBase: new URL('https://ahsan-potfolio.vercel.app'),
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Navbar />
+        <SiteExperience />
         <main>{children}</main>
         <Footer />
       </body>
