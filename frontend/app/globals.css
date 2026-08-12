@@ -141,6 +141,14 @@ img { display:block; max-width:100%; }
   min-height:0;
   aspect-ratio:2106/990;
 }
+.split-hero-image.has-project-render{
+  height:100svh;
+  min-height:720px;
+  aspect-ratio:auto;
+}
+.split-hero-image.has-project-render img{
+  object-fit:cover;
+}
 .split-hero-image.has-project-render img,
 .era-location-image img,
 .era-concept-image img,
@@ -167,5 +175,7 @@ img { display:block; max-width:100%; }
   .era-live-grid>img:last-child,
   .project-image,
   .detail-hero{height:auto;min-height:0;aspect-ratio:2106/990}
+  .split-hero-image.has-project-render{height:auto;min-height:0;aspect-ratio:2106/990}
+  .split-hero-image.has-project-render img{object-fit:contain}
   .split-hero-image.has-profile{height:68vh;min-height:480px}
 }
