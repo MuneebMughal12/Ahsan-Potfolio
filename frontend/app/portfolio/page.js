@@ -30,7 +30,7 @@ export default function Portfolio() {
       <header className="projects-hero section-pad">
         <p className="eyebrow">A living archive · Synced with the admin panel</p>
         <h1>Selected<br /><em>projects</em></h1>
-        <div className="projects-summary"><p>Architecture, interiors and visual studies developed across Pakistan and internationally.</p><strong>{String(projects.length || 38).padStart(2, '0')}</strong><span>Works</span></div>
+        <div className="projects-summary"><p>Architecture, interiors and visual studies developed across Pakistan and internationally.</p><strong>{String(projects.length || 48).padStart(2, '0')}</strong><span>Works</span></div>
       </header>
 
       <div className="filter-bar section-pad">

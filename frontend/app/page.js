@@ -10,7 +10,6 @@ const cover = (project, index = 0) => imageUrl(project?.images?.[index]) || proj
 
 export default function Home() {
   const [projects, setProjects] = useState([])
-  const [heroMode, setHeroMode] = useState('day')
   const [selectedType, setSelectedType] = useState(0)
   const [profile, setProfile] = useState({ url: '', adjustment: { posX: 0, posY: 0, scale: 1 } })
 
@@ -24,37 +23,38 @@ export default function Home() {
   }, [])
 
   const picks = useMemo(() => {
-    const find = (title) => projects.find((project) => project.title === title)
+    const page = (number) => projects.find((project) => project.sourcePages?.includes(number))
     return {
-      beverly: find('Beverly Residency Pine City') || projects.find((project) => project.category === 'Residential'),
-      robert: find('Robert House') || projects.find((project) => project.category === 'Residential'),
-      golden: find('The Golden Hive Central City') || projects.find((project) => project.category === 'Residential'),
-      lavie: find('Lavie Residency Ratti Gali') || projects.find((project) => project.category === 'Residential'),
-      skyline: find('Skyline Residencia') || projects.find((project) => project.category === 'Residential'),
-      vola: find('Vola Vista Kwanenya') || projects[20] || projects[3],
-      urban: find('The Urban Oasis') || projects[11] || projects[5],
+      hero: page(105) || projects[0],
+      classic: page(70) || projects[1],
+      islamabad: page(74) || projects[2],
+      modern: page(116) || projects[3],
+      house: page(121) || projects[4],
+      concept: page(137) || projects[5],
+      interior: page(119) || projects[6],
+      detail: page(132) || projects[7],
     }
   }, [projects])
 
   const residentialProjects = useMemo(() => projects.filter((project) => project.category === 'Residential'), [projects])
-  const heroProject = heroMode === 'day' ? picks.vola : picks.beverly
-  const types = [picks.vola, picks.robert, picks.beverly].filter(Boolean)
+  const heroProject = picks.hero
+  const types = [picks.classic, picks.hero, picks.modern].filter(Boolean)
   const activeType = types[selectedType] || types[0]
 
   return (
     <div className="era-home">
       <section className="era-hero" id="hero">
-        <AnimatePresence mode="wait">
-          {cover(heroProject, heroMode === 'day' ? 1 : 0) && <motion.img key={`${heroMode}-${heroProject?._id}`} src={cover(heroProject, heroMode === 'day' ? 1 : 0)} alt={heroProject?.title || 'Ahsan Aziz residential architecture'} initial={{opacity:0,scale:1.035}} animate={{opacity:1,scale:1}} exit={{opacity:0}} transition={{duration:1.2}} />}
-        </AnimatePresence>
-        <div className="era-hero-wash" />
-        <div className="era-hero-title"><h1>Ahsan Aziz</h1><h2>Architecture</h2></div>
-        <div className={`era-profile ${profile.url ? 'has-image' : ''}`}>
-          {profile.url ? <img src={profile.url} alt="Ahsan Aziz, Architect" style={{ objectPosition: `${50 + (profile.adjustment.posX / 300) * 45}% ${50 + (profile.adjustment.posY / 200) * 45}%`, transform: `scale(${profile.adjustment.scale})` }} /> : <div><strong>AA</strong><span>Profile photo</span></div>}
-          <p><span>Ahsan Aziz</span><small>Architect · 4+ years</small></p>
+        <div className="split-hero-copy">
+          <p className="eyebrow">Architect · Islamabad</p>
+          <h1>Ahsan<br /><em>Aziz</em></h1>
+          <h2>Residential architecture shaped around people, place and everyday life.</h2>
+          <div className="split-hero-links"><Link href="/portfolio">View houses <span>↗</span></Link><Link href="/contact">Start a project</Link></div>
+          <div className="split-hero-stats"><div><strong>4+</strong><span>Years experience</span></div><div><strong>44</strong><span>Residential works</span></div></div>
         </div>
-        <div className="era-hero-tagline"><span>A place</span><button onClick={() => setHeroMode('day')} className={heroMode === 'day' ? 'active' : ''}>by day</button><button onClick={() => setHeroMode('night')} className={heroMode === 'night' ? 'active' : ''}>by night</button><span>to create</span></div>
-        <p className="era-hero-caption">Selected architecture · Pakistan and beyond</p>
+        <div className="split-hero-image">
+          <AnimatePresence mode="wait"><motion.img key={profile.url || heroProject?._id} src={profile.url || cover(heroProject)} alt={profile.url ? 'Ahsan Aziz, Architect' : heroProject?.title || 'Residential architecture'} style={profile.url ? { objectPosition: `${50 + (profile.adjustment.posX / 300) * 45}% ${50 + (profile.adjustment.posY / 200) * 45}%`, transform: `scale(${profile.adjustment.scale})` } : undefined} initial={{opacity:0,scale:1.02}} animate={{opacity:1,scale:1}} transition={{duration:1}} /></AnimatePresence>
+          <p>{profile.url ? 'Ahsan Aziz · Architect' : `${heroProject?.title || 'Selected residence'} · Upload profile photo from Admin Settings`}</p>
+        </div>
       </section>
 
       <section className="era-place section-pad">
@@ -65,13 +65,13 @@ export default function Home() {
 
       <section className="era-location section-pad">
         <div className="era-location-copy"><p className="eyebrow">Real-life architecture</p><h2>Designed for<br /><em>how life feels.</em></h2><p>Thoughtful buildings shaped by their climate, context and the lives unfolding inside them. Each project balances a strong identity with effortless everyday use.</p><p className="era-small-copy">Designed as places to belong, not objects to observe.</p></div>
-        <Link href={picks.urban ? `/portfolio/${picks.urban._id}` : '/portfolio'} className="era-location-image era-location-image-a"><img src={cover(picks.urban)} alt={picks.urban?.title || 'Residential architecture'} loading="lazy" /><span>{picks.urban?.title} ↗</span></Link>
-        <Link href={picks.golden ? `/portfolio/${picks.golden._id}` : '/portfolio'} className="era-location-image era-location-image-b"><img src={cover(picks.golden)} alt={picks.golden?.title || 'Contemporary residence'} loading="lazy" /><span>{picks.golden?.location} ↗</span></Link>
+        <Link href={picks.islamabad ? `/portfolio/${picks.islamabad._id}` : '/portfolio'} className="era-location-image era-location-image-a"><img src={cover(picks.islamabad)} alt={picks.islamabad?.title || 'Residential architecture'} loading="lazy" /><span>{picks.islamabad?.title} ↗</span></Link>
+        <Link href={picks.house ? `/portfolio/${picks.house._id}` : '/portfolio'} className="era-location-image era-location-image-b"><img src={cover(picks.house)} alt={picks.house?.title || 'Contemporary residence'} loading="lazy" /><span>{picks.house?.location} ↗</span></Link>
       </section>
 
       <section className="era-concept">
-        <div className="era-concept-image"><img src={cover(picks.robert)} alt={picks.robert?.title || 'Contemporary house'} loading="lazy" /></div>
-        <div className="era-concept-copy section-pad"><p className="era-vertical-label">The concept</p><h2>Homes with<br /><em>a clear idea.</em></h2><div><h3>Every residence begins with one strong response to site, family and everyday life.</h3><p>Clean contemporary lines meet warm materials, purposeful circulation and carefully framed views. The result is a home that feels distinctive, comfortable and effortless to live in.</p><Link href={picks.robert ? `/portfolio/${picks.robert._id}` : '/portfolio'} className="text-link">Explore the house <span>↗</span></Link></div></div>
+        <div className="era-concept-image"><img src={cover(picks.concept)} alt={picks.concept?.title || 'Contemporary house'} loading="lazy" /></div>
+        <div className="era-concept-copy section-pad"><p className="era-vertical-label">The concept</p><h2>Homes with<br /><em>a clear idea.</em></h2><div><h3>Every residence begins with one strong response to site, family and everyday life.</h3><p>Clean contemporary lines meet warm materials, purposeful circulation and carefully framed views. The result is a home that feels distinctive, comfortable and effortless to live in.</p><Link href={picks.concept ? `/portfolio/${picks.concept._id}` : '/portfolio'} className="text-link">Explore the house <span>↗</span></Link></div></div>
       </section>
 
       <section className="era-experience section-pad">
@@ -79,7 +79,7 @@ export default function Home() {
         <div className="era-experience-head"><p className="eyebrow">Professional experience</p><h2>More than <em>4 years</em><br />of designing places.</h2></div>
         <div className="era-experience-grid">
           <div className="era-career"><span>Current position</span><h3>Senior Architect</h3><p>Geoeon Enterprises · Islamabad</p><p>Experienced across residential, commercial and interior architecture, with a focus on sustainable design and high-quality architectural visualization.</p></div>
-          <div className="era-experience-stats"><div><strong>4+</strong><span>Years of experience</span></div><div><strong>38+</strong><span>Completed projects</span></div><div><strong>03</strong><span>International regions</span></div></div>
+          <div className="era-experience-stats"><div><strong>4+</strong><span>Years of experience</span></div><div><strong>48+</strong><span>Completed projects</span></div><div><strong>03</strong><span>International regions</span></div></div>
           <div className="era-expertise"><p className="eyebrow">Areas of expertise</p>{['Residential Architecture','Villa & House Design','Interior Design','Commercial & Mixed Use','3D Visualization','Sustainable Design'].map((item,index)=><div key={item}><span>0{index+1}</span><strong>{item}</strong></div>)}</div>
         </div>
       </section>
@@ -100,7 +100,7 @@ export default function Home() {
 
       <section className="era-residential section-pad">
         <div className="era-residential-head"><p className="eyebrow">Residential collection</p><h2>Houses, villas<br />and places to <em>belong.</em></h2><Link href="/portfolio" className="text-link">All residential work <span>↗</span></Link></div>
-        <div className="era-residential-grid">{residentialProjects.slice(0,8).map((project,index)=><Link href={`/portfolio/${project._id}`} key={project._id} className={`era-home-card card-home-${index+1}`}><img src={cover(project)} alt={project.title} loading="lazy" /><div><small>{String(index+1).padStart(2,'0')} · {project.location}</small><h3>{project.title}</h3><span>View residence ↗</span></div></Link>)}</div>
+        <div className="era-residential-grid">{residentialProjects.slice(0,12).map((project,index)=><Link href={`/portfolio/${project._id}`} key={project._id} className={`era-home-card card-home-${index+1}`}><img src={cover(project)} alt={project.title} loading="lazy" /><div><small>{String(index+1).padStart(2,'0')} · {project.location}</small><h3>{project.title}</h3><span>View residence ↗</span></div></Link>)}</div>
       </section>
 
       <section className="era-community section-pad">
@@ -114,9 +114,9 @@ export default function Home() {
       <section className="era-live">
         <div className="era-live-title section-pad"><h2>The space to</h2><h3>Live in</h3></div>
         <div className="era-live-grid section-pad">
-          <img src={cover(picks.vola, 2)} alt={picks.vola?.title || 'Residential design'} loading="lazy" />
+          <img src={cover(picks.interior)} alt={picks.interior?.title || 'Residential design'} loading="lazy" />
           <div><p className="eyebrow">More than a rendering</p><h4>Every detail is selected to make a place feel elegant, intuitive and effortless to live in.</h4><p>Material, light, proportion and landscape work together as one architectural experience.</p></div>
-          <img src={cover(picks.lavie)} alt={picks.lavie?.title || 'Architectural detail'} loading="lazy" />
+          <img src={cover(picks.detail)} alt={picks.detail?.title || 'Architectural detail'} loading="lazy" />
         </div>
       </section>
 

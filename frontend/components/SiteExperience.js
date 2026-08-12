@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 
-const eagerImageSelector = '.era-hero > img, .era-profile > img, .detail-hero > img'
+const eagerImageSelector = '.era-hero > img, .split-hero-image img, .detail-hero > img'
 const revealSelector = [
   'main section:not(.era-hero):not(.detail-hero)',
   'main header:not(.projects-hero):not(.editorial-hero)',
