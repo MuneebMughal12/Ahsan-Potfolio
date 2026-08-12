@@ -1,36 +1,36 @@
 const express = require('express')
+const auth = require('../middleware/auth')
+const Settings = require('../models/Settings')
 
 const router = express.Router()
 
-// TODO: Create Settings model and implement CRUD operations
-
-// Get settings
 router.get('/', async (req, res) => {
   try {
-    // TODO: Fetch from database
-    const settings = {
-      siteName: 'Ahsan Aziz Portfolio',
-      siteDescription: 'Professional Architecture Portfolio',
-      email: 'ahsanaziz@gmail.com',
-      phone: '+92-300-XXXXXXX',
-      location: 'Pakistan',
-      socialLinks: {
-        linkedin: 'https://linkedin.com',
-        instagram: 'https://instagram.com',
-        github: 'https://github.com',
-      },
-    }
+    const settings = await Settings.findOneAndUpdate(
+      { key: 'site' },
+      { $setOnInsert: { key: 'site' } },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    )
     res.json(settings)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
-// Update settings
-router.put('/', async (req, res) => {
+router.put('/', auth, async (req, res) => {
   try {
-    // TODO: Update in database
-    res.json({ message: 'Settings updated' })
+    const allowed = [
+      'fullName', 'title', 'phone', 'email', 'location', 'address', 'bio',
+      'workExperience', 'skills', 'education', 'languages',
+      'profileImageUrl', 'profileImageAdjustment',
+    ]
+    const updates = Object.fromEntries(allowed.filter((key) => req.body[key] !== undefined).map((key) => [key, req.body[key]]))
+    const settings = await Settings.findOneAndUpdate(
+      { key: 'site' },
+      { $set: updates, $setOnInsert: { key: 'site' } },
+      { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true }
+    )
+    res.json(settings)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }

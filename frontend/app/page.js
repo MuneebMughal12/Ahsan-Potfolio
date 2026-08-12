@@ -12,10 +12,14 @@ export default function Home() {
   const [projects, setProjects] = useState([])
   const [heroMode, setHeroMode] = useState('day')
   const [selectedType, setSelectedType] = useState(0)
+  const [profile, setProfile] = useState({ url: '', adjustment: { posX: 0, posY: 0, scale: 1 } })
 
   useEffect(() => {
     let active = true
     api.projects.getAll().then((data) => active && setProjects(data)).catch(() => {})
+    api.settings.get().then((data) => {
+      if (active && data.profileImageUrl) setProfile({ url: data.profileImageUrl, adjustment: data.profileImageAdjustment || { posX: 0, posY: 0, scale: 1 } })
+    }).catch(() => {})
     return () => { active = false }
   }, [])
 
@@ -45,6 +49,10 @@ export default function Home() {
         </AnimatePresence>
         <div className="era-hero-wash" />
         <div className="era-hero-title"><h1>Ahsan Aziz</h1><h2>Architecture</h2></div>
+        <div className={`era-profile ${profile.url ? 'has-image' : ''}`}>
+          {profile.url ? <img src={profile.url} alt="Ahsan Aziz, Architect" style={{ objectPosition: `${50 + (profile.adjustment.posX / 300) * 45}% ${50 + (profile.adjustment.posY / 200) * 45}%`, transform: `scale(${profile.adjustment.scale})` }} /> : <div><strong>AA</strong><span>Profile photo</span></div>}
+          <p><span>Ahsan Aziz</span><small>Architect · 4+ years</small></p>
+        </div>
         <div className="era-hero-tagline"><span>A place</span><button onClick={() => setHeroMode('day')} className={heroMode === 'day' ? 'active' : ''}>by day</button><button onClick={() => setHeroMode('night')} className={heroMode === 'night' ? 'active' : ''}>by night</button><span>to create</span></div>
         <p className="era-hero-caption">Selected architecture · Pakistan and beyond</p>
       </section>
@@ -68,10 +76,10 @@ export default function Home() {
 
       <section className="era-experience section-pad">
         <div className="era-counter"><span>1</span><i /><span>2</span></div>
-        <div className="era-experience-head"><p className="eyebrow">Professional experience</p><h2>More than <em>10 years</em><br />of designing places.</h2></div>
+        <div className="era-experience-head"><p className="eyebrow">Professional experience</p><h2>More than <em>4 years</em><br />of designing places.</h2></div>
         <div className="era-experience-grid">
           <div className="era-career"><span>Current position</span><h3>Senior Architect</h3><p>Geoeon Enterprises · Islamabad</p><p>Experienced across residential, commercial and interior architecture, with a focus on sustainable design and high-quality architectural visualization.</p></div>
-          <div className="era-experience-stats"><div><strong>10+</strong><span>Years of experience</span></div><div><strong>38+</strong><span>Completed projects</span></div><div><strong>03</strong><span>International regions</span></div></div>
+          <div className="era-experience-stats"><div><strong>4+</strong><span>Years of experience</span></div><div><strong>38+</strong><span>Completed projects</span></div><div><strong>03</strong><span>International regions</span></div></div>
           <div className="era-expertise"><p className="eyebrow">Areas of expertise</p>{['Residential Architecture','Villa & House Design','Interior Design','Commercial & Mixed Use','3D Visualization','Sustainable Design'].map((item,index)=><div key={item}><span>0{index+1}</span><strong>{item}</strong></div>)}</div>
         </div>
       </section>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { FiArrowLeft, FiCheck } from 'react-icons/fi'
@@ -52,6 +52,36 @@ export default function AdminSettings() {
     posY: 0,
     scale: 1,
   })
+
+  useEffect(() => {
+    api.settings.get().then((data) => {
+      if (data.profileImageUrl) setProfileImage({ url: data.profileImageUrl, file: null })
+      if (data.profileImageAdjustment) setImageAdjustment(data.profileImageAdjustment)
+    }).catch(() => {})
+  }, [])
+
+  const handleProfileImageSubmit = async (e) => {
+    e.preventDefault()
+    if (!profileImage.url) return
+    try {
+      setLoading(true)
+      setError('')
+      let image = profileImage.url
+      if (image.startsWith('data:image/')) {
+        const uploaded = await api.projects.upload(image, 'ahsan-aziz-profile')
+        image = uploaded.url
+      }
+      await api.settings.update({ profileImageUrl: image, profileImageAdjustment: imageAdjustment })
+      setProfileImage({ url: image, file: null })
+      localStorage.setItem('profileImage', image)
+      localStorage.setItem('profileImageAdjustment', JSON.stringify(imageAdjustment))
+      setSuccess('Profile image is live on the homepage!')
+    } catch (err) {
+      setError(err.message || 'Failed to save profile image')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault()
@@ -568,17 +598,7 @@ export default function AdminSettings() {
         >
           <h2 className="text-2xl font-bold mb-6 gradient-text">Upload & Adjust Profile Image</h2>
           <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              if (profileImage.url) {
-                if (typeof window !== 'undefined') {
-                  // Store both image URL and adjustment settings
-                  localStorage.setItem('profileImage', profileImage.url)
-                  localStorage.setItem('profileImageAdjustment', JSON.stringify(imageAdjustment))
-                }
-                setSuccess('Profile image updated!')
-              }
-            }}
+            onSubmit={handleProfileImageSubmit}
             className="grid grid-cols-1 md:grid-cols-2 gap-8"
           >
             {/* Left Column - Upload Controls */}

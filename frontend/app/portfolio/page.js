@@ -10,7 +10,7 @@ const cover = (project) => project.thumbnail || imageUrl(project.images?.[0]) ||
 
 export default function Portfolio() {
   const [projects, setProjects] = useState([])
-  const [category, setCategory] = useState('All')
+  const [category, setCategory] = useState('Residential')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
