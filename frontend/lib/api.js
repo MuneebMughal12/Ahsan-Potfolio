@@ -1,4 +1,8 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL
+const API_URL =
+  typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+    ? '/api'
+    : configuredApiUrl || 'http://localhost:5000/api'
 
 export const apiCall = async (endpoint, options = {}) => {
   const defaultOptions = {
@@ -73,6 +77,12 @@ export const projects = {
   delete: (id) =>
     apiCall(`/projects/${id}`, {
       method: 'DELETE',
+    }),
+
+  upload: (data, filename) =>
+    apiCall('/projects/upload', {
+      method: 'POST',
+      body: JSON.stringify({ data, filename }),
     }),
 }
 
@@ -168,3 +178,14 @@ export const settings = {
       body: JSON.stringify(data),
     }),
 }
+
+const api = {
+  auth,
+  projects,
+  gallery,
+  contact,
+  testimonials,
+  settings,
+}
+
+export default api

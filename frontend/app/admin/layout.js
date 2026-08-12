@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import AdminSidebar from '@/components/AdminSidebar'
+import api from '@/lib/api'
 
 export default function AdminLayout({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -20,13 +21,24 @@ export default function AdminLayout({ children }) {
       return
     }
 
-    const token = localStorage.getItem('adminToken')
-    if (!token) {
-      router.push('/admin/login')
-    } else {
-      setIsAuthenticated(true)
+    const verify = async () => {
+      const token = localStorage.getItem('adminToken')
+      if (!token) {
+        router.push('/admin/login')
+        setLoading(false)
+        return
+      }
+      try {
+        await api.auth.verify()
+        setIsAuthenticated(true)
+      } catch (error) {
+        localStorage.removeItem('adminToken')
+        router.push('/admin/login')
+      } finally {
+        setLoading(false)
+      }
     }
-    setLoading(false)
+    verify()
   }, [router, isLoginPage])
 
   if (loading) return <div className="bg-dark min-h-screen" />

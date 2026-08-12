@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import api from '@/lib/api'
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('')
@@ -16,13 +17,9 @@ export default function AdminLogin() {
     setError('')
 
     try {
-      // Hardcoded credentials
-      if (email === 'ahsanaziz@gmail.com' && password === 'Ahsanaziz') {
-        localStorage.setItem('adminToken', 'temp_token')
-        router.push('/admin/dashboard')
-      } else {
-        setError('Invalid email or password')
-      }
+      const result = await api.auth.login(email, password)
+      localStorage.setItem('adminToken', result.token)
+      router.push('/admin/dashboard')
     } catch (error) {
       setError('Login failed. Please try again.')
       console.error('Login error:', error)
@@ -82,10 +79,6 @@ export default function AdminLogin() {
           </button>
         </form>
 
-        <p className="text-center text-gray-400 text-sm mt-6">
-          Email: ahsanaziz@gmail.com<br/>
-          Password: Ahsanaziz
-        </p>
       </div>
     </div>
   )

@@ -80,6 +80,21 @@ a, button {
   background-clip: text;
 }
 
+.admin-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #4b5563;
+  background: #111827;
+  color: #f9fafb;
+  border-radius: 0.5rem;
+  outline: none;
+}
+
+.admin-input:focus {
+  border-color: #06b6d4;
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.15);
+}
+
 /* Hover effects */
 .hover-scale {
   transition: transform 0.3s ease;

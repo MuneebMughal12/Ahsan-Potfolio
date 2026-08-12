@@ -5,11 +5,13 @@ import Link from 'next/link'
 import { FiArrowRight, FiStar, FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
 import { useState, useEffect } from 'react'
 import TestimonialForm from '@/components/TestimonialForm'
+import api from '@/lib/api'
 
 export default function Home() {
   const [profileImage, setProfileImage] = useState('')
   const [professionalImage, setProfessionalImage] = useState('')
   const [imageAdjustment, setImageAdjustment] = useState({ posX: 0, posY: 0, scale: 1 })
+  const [featuredProjects, setFeaturedProjects] = useState([])
 
   useEffect(() => {
     // Fetch profile image from localStorage or default
@@ -32,6 +34,26 @@ export default function Home() {
         }
       }
     }
+  }, [])
+
+  useEffect(() => {
+    const loadFeaturedProjects = async () => {
+      try {
+        const data = await api.projects.getFeatured()
+        setFeaturedProjects(data.slice(0, 6))
+      } catch (error) {
+        try {
+          const response = await fetch('/project-data.json')
+          const data = await response.json()
+          setFeaturedProjects(data.filter((project) => project.featured).slice(0, 6))
+        } catch (fallbackError) {
+          console.error('Could not load featured projects', fallbackError)
+        }
+      }
+    }
+    loadFeaturedProjects()
+    const refresh = window.setInterval(loadFeaturedProjects, 15000)
+    return () => window.clearInterval(refresh)
   }, [])
 
   const containerVariants = {
@@ -61,30 +83,6 @@ export default function Home() {
     { name: '3DS Max', level: 85 },
     { name: 'Lumion', level: 82 },
     { name: 'Adobe Suite', level: 80 },
-  ]
-
-  const projects = [
-    {
-      id: 1,
-      title: 'Modern Residential Complex',
-      description: 'Contemporary apartment building with sustainable design features',
-      tech: ['Revit', 'AutoCAD', 'Lumion'],
-      category: 'Residential',
-    },
-    {
-      id: 2,
-      title: 'Commercial Office Space',
-      description: 'Premium office tower with green building certification',
-      tech: ['Revit', '3DS Max', 'Adobe'],
-      category: 'Commercial',
-    },
-    {
-      id: 3,
-      title: 'Interior Design Showcase',
-      description: 'Luxury interior redesign of corporate headquarters',
-      tech: ['SketchUp', 'Adobe', 'Lumion'],
-      category: 'Interior',
-    },
   ]
 
   const galleryItems = [
@@ -384,9 +382,9 @@ export default function Home() {
           <p className="text-gray-400 mb-12">Showcase of recent architectural projects</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
+            {featuredProjects.map((project, index) => (
               <motion.div
-                key={project.id}
+                key={project._id || project.slug || project.title}
                 className="bg-secondary rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -395,10 +393,12 @@ export default function Home() {
                 whileHover={{ y: -5 }}
               >
                 <div className="h-40 sm:h-48 bg-dark flex items-center justify-center overflow-hidden">
-                  {project.thumbnail ? (
+                  {project.thumbnail || project.images?.[0] ? (
                     <img
-                      src={project.thumbnail}
+                      src={project.thumbnail || project.images?.[0]?.url || project.images?.[0]}
                       alt={project.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -410,14 +410,7 @@ export default function Home() {
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-2">{project.title}</h3>
                   <p className="text-primary text-sm mb-3 font-medium">{project.category}</p>
-                  <p className="text-gray-400 text-sm mb-4">{project.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.tech.map((tech, i) => (
-                      <span key={i} className="px-2 py-1 bg-dark text-primary text-xs rounded">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="text-gray-400 text-sm mb-4 line-clamp-3">{project.description}</p>
                   <Link href="/portfolio" className="inline-block">
                     <motion.div
                       className="text-primary font-semibold hover:text-accent transition-colors inline-flex items-center gap-2 cursor-pointer"
