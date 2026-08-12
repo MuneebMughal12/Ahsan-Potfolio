@@ -98,7 +98,7 @@ export default function Home() {
       </section>
 
       <section className="era-architecture section-pad">
-        <p className="eyebrow">Architecture</p><h2>Clean contemporary lines.<br /><em>Warm human spaces.</em></h2><div className="era-architecture-grid"><p>The work balances clarity and texture, bold form and daily comfort. Each project is developed as a coherent whole—from massing and movement to material and mood.</p><Link href="/about" className="text-link">About the architect <span>↗</span></Link><div><small>Architecture by</small><strong>Ahsan Aziz</strong><span>Mansehra · Pakistan</span></div></div>
+        <p className="eyebrow">Architecture</p><h2>Clean contemporary lines.<br /><em>Warm human spaces.</em></h2><div className="era-architecture-grid"><p>The work balances clarity and texture, bold form and daily comfort. Each project is developed as a coherent whole—from massing and movement to material and mood.</p><Link href="/about" className="text-link">About the architect <span>↗</span></Link><div><small>Architecture by</small><strong>Ahsan Aziz</strong><span>I-14/3 · Islamabad</span></div></div>
       </section>
     </div>
   )

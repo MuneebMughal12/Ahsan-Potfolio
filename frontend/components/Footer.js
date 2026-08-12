@@ -17,7 +17,7 @@ export default function Footer() {
         <div><span className="footer-mark">AA</span><p>Architecture shaped by context,<br />clarity and human experience.</p></div>
         <div><small>Explore</small><Link href="/portfolio">All projects</Link><Link href="/about">Studio</Link></div>
         <div><small>Contact</small><a href="mailto:geocoenterprises@outlook.com">geocoenterprises@outlook.com</a><a href="tel:+923161588956">+92 316 1588956</a></div>
-        <div><small>Based in</small><p>Mansehra, Pakistan<br />Working internationally</p></div>
+        <div><small>Based in</small><p>I-14/3, Islamabad<br />Working internationally</p></div>
       </div>
       <div className="footer-bottom"><span>© {new Date().getFullYear()} Ahsan Aziz</span><span>Architectural portfolio</span></div>
     </footer>
