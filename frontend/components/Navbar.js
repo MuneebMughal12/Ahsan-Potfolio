@@ -1,94 +1,50 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { FiMenu, FiX } from 'react-icons/fi'
-import { motion } from 'framer-motion'
+import { usePathname } from 'next/navigation'
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/portfolio', label: 'Projects' },
+  { href: '/about', label: 'Studio' },
+  { href: '/contact', label: 'Contact' },
+]
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
+  const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
-  const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/portfolio', label: 'Portfolio' },
-    { href: '/gallery', label: 'Gallery' },
-    { href: '/contact', label: 'Contact' },
-  ]
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 30)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => setOpen(false), [pathname])
+  if (pathname?.startsWith('/admin')) return null
 
   return (
-    <nav className="sticky top-0 z-50 bg-secondary shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="/">
-            <motion.div
-              className="flex items-center gap-2 cursor-pointer"
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">AA</span>
-              </div>
-              <span className="text-lg font-bold gradient-text hidden sm:inline">Ahsan Aziz</span>
-            </motion.div>
+    <header className={`site-nav ${scrolled || pathname !== '/' ? 'site-nav--solid' : ''}`}>
+      <Link href="/" className="brand" aria-label="Ahsan Aziz home">
+        <span className="brand-mark">AA</span>
+        <span className="brand-copy"><strong>Ahsan Aziz</strong><small>Architecture</small></span>
+      </Link>
+
+      <nav className={`nav-links ${open ? 'is-open' : ''}`} aria-label="Primary navigation">
+        {links.map((link) => (
+          <Link key={link.href} href={link.href} className={pathname === link.href ? 'active' : ''}>
+            {link.label}
           </Link>
+        ))}
+        <Link href="/contact" className="nav-cta">Start a project <span>↗</span></Link>
+      </nav>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex gap-8">
-            {navLinks.map((link) => (
-              <motion.div key={link.href} whileHover={{ scale: 1.05 }}>
-                <Link href={link.href} className="font-medium text-gray-300 hover:text-primary transition-colors">
-                  {link.label}
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Contact Button */}
-          <div className="hidden md:flex gap-4">
-            <Link href="/contact" className="w-fit">
-              <motion.div
-                className="px-6 py-2 gradient-bg text-white rounded-lg font-medium hover:shadow-lg cursor-pointer"
-                whileHover={{ scale: 1.05 }}
-              >
-                Contact
-              </motion.div>
-            </Link>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-2xl"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <FiX /> : <FiMenu />}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isOpen && (
-          <motion.div
-            className="md:hidden pb-4 space-y-2"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="block px-4 py-2 text-gray-300 hover:bg-dark rounded-lg"
-                onClick={() => setIsOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Link href="/contact">
-              <button className="w-full mt-4 px-4 py-2 gradient-bg text-white rounded-lg font-medium">
-                Contact
-              </button>
-            </Link>
-          </motion.div>
-        )}
-      </div>
-    </nav>
+      <button className="menu-toggle" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Toggle menu">
+        <span /> <span />
+      </button>
+    </header>
   )
 }
