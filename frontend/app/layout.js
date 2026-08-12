@@ -10,8 +10,14 @@ export const metadata = {
   openGraph: {
     title: 'Ahsan Aziz — Architecture',
     description: 'Selected architectural works shaped by context, clarity and human experience.',
-    images: ['/og-card.png'],
+    images: ['/og.png'],
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ahsan Aziz — Architecture',
+    description: 'Selected architectural works shaped by context, clarity and human experience.',
+    images: ['/og.png'],
   },
 }
 
