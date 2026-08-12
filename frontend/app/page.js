@@ -31,7 +31,7 @@ export default function Home() {
     }
   }, [projects])
 
-  const heroProject = heroMode === 'day' ? picks.sonery : picks.infinity
+  const heroProject = heroMode === 'day' ? picks.vision : picks.infinity
   const types = [picks.vision, picks.vola, picks.shafaq].filter(Boolean)
   const activeType = types[selectedType] || types[0]
 
@@ -46,7 +46,6 @@ export default function Home() {
         <div className="era-hero-wash" />
         <div className="era-hero-title"><h1>Ahsan Aziz</h1><h2>Architecture</h2></div>
         <div className="era-hero-tagline"><span>A place</span><button onClick={() => setHeroMode('day')} className={heroMode === 'day' ? 'active' : ''}>by day</button><button onClick={() => setHeroMode('night')} className={heroMode === 'night' ? 'active' : ''}>by night</button><span>to create</span></div>
-        <Link href="/portfolio" className="era-circle-link"><span>View all</span><strong>Projects</strong><b>↗</b></Link>
         <p className="era-hero-caption">Selected architecture · Pakistan and beyond</p>
       </section>
 

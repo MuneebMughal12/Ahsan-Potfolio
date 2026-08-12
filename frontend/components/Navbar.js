@@ -39,7 +39,9 @@ export default function Navbar() {
             {link.label}
           </Link>
         ))}
-        <Link href="/contact" className="nav-cta">Start a project <span>↗</span></Link>
+        <Link href={pathname === '/' ? '/portfolio' : '/contact'} className="nav-cta">
+          {pathname === '/' ? 'View projects' : 'Start a project'} <span>↗</span>
+        </Link>
       </nav>
 
       <button className="menu-toggle" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Toggle menu">
